@@ -3,203 +3,815 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembuat Prompt Sempurna AI</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Penghasil Prompt AI Kreatif</title>
+    <!-- Memuat Tailwind CSS untuk styling yang cepat dan responsif -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat font Inter dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Font Inter */
+        /* Mengatur font dasar dan warna latar belakang untuk body (sekarang selalu gelap) */
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Latar belakang gelap permanen */
+            color: #e2e8f0; /* Warna teks terang permanen */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Tetap pertahankan transisi untuk estetika */
         }
-        /* Style untuk multi-select dropdown */
-        select[multiple] {
-            height: auto; /* Allow height to adjust based on options */
-            min-height: 120px; /* Minimum height for better visibility */
+
+        /* Styling untuk card kontainer utama (sekarang selalu gelap) */
+        .container-card {
+            background-color: #2d3748; /* Latar belakang card gelap permanen */
+            border-radius: 1rem; /* Sudut membulat */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1); /* Bayangan lebih gelap permanen */
+            padding: 2rem; /* Padding internal */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Tetap pertahankan transisi */
+        }
+
+        /* Styling dasar untuk semua input field (input teks, textarea, select) (sekarang selalu gelap) */
+        .input-field {
+            width: 100%; /* Lebar penuh dari parent */
+            padding: 0.75rem 1rem; /* Padding vertikal dan horizontal */
+            border: 1px solid #616e7e; /* Border abu-abu gelap permanen */
+            border-radius: 0.5rem; /* Sudut membulat */
+            font-size: 1rem; /* Ukuran font standar */
+            background-color: #4a5568; /* Latar belakang input gelap permanen */
+            color: #e2e8f0; /* Teks terang permanen */
+            transition: all 0.2s ease-in-out; /* Transisi halus untuk focus */
+        }
+        /* Placeholder text (sekarang selalu gelap) */
+        .input-field::placeholder {
+            color: #a0aec0; /* Warna placeholder lebih terang permanen */
+        }
+
+        /* Styling saat input field dalam keadaan focus (sekarang selalu gelap) */
+        .input-field:focus {
+            border-color: #63b3ed; /* Biru lebih terang saat fokus permanen */
+            ring: 2px; /* Ring biru terang permanen */
+            ring-color: #63b3ed;
+            outline: none; /* Hilangkan outline default browser */
+        }
+
+        /* Styling untuk tombol utama (primary button) (sekarang selalu gelap) */
+        .btn-primary {
+            background-color: #63b3ed; /* Biru lebih terang permanen */
+            color: white; /* Warna teks putih permanen */
+            padding: 0.75rem 1.5rem; /* Padding internal */
+            border-radius: 0.75rem; /* Sudut membulat lebih besar */
+            font-weight: 600; /* Font semi-bold */
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease; /* Transisi hover, active, dan box-shadow */
+            box-shadow: 0 4px 6px -1px rgba(99, 179, 237, 0.3), 0 2px 4px -1px rgba(99, 179, 237, 0.1); /* Bayangan permanen */
+        }
+        /* Styling saat tombol utama di-hover (sekarang selalu gelap) */
+        .btn-primary:hover {
+            background-color: #4299e1; /* Biru lebih gelap saat hover permanen */
+            transform: translateY(-1px); /* Efek angkat sedikit */
+        }
+        /* Styling saat tombol utama di-klik */
+        .btn-primary:active {
+            transform: translateY(0); /* Kembali ke posisi semula */
+        }
+
+        /* Styling untuk tombol sekunder (sekarang selalu gelap) */
+        .btn-secondary {
+            background-color: #718096; /* Abu-abu permanen */
+            color: white; /* Warna teks putih permanen */
+            padding: 0.5rem 1rem; /* Padding internal */
+            border-radius: 0.5rem; /* Sudut membulat */
+            font-weight: 500; /* Font medium */
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease; /* Transisi hover dan box-shadow */
+        }
+        /* Styling saat tombol sekunder di-hover (sekarang selalu gelap) */
+        .btn-secondary:hover {
+            background-color: #5f6b7a; /* Abu-abu lebih gelap saat hover permanen */
+        }
+
+        /* Styling untuk indikator loading (sekarang selalu gelap) */
+        .loading-indicator {
+            display: none; /* Sembunyikan secara default */
+            border: 4px solid #4a5568;
+            border-top: 4px solid #63b3ed;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal Alert Kustom (sekarang selalu gelap) */
+        #customAlert > div {
+            background-color: #2d3748; /* Latar belakang modal gelap */
+            color: #e2e8f0; /* Teks modal terang */
+        }
+        #customAlert p {
+            color: #e2e8f0; /* Teks pesan modal terang */
+        }
+
+        /* Responsiveness for small screens */
+        @media (max-width: 767px) {
+            .container-card {
+                padding: 1.5rem; /* Mengurangi padding pada layar kecil */
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 hover:scale-105">
-        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-6">Pembuat Prompt AI Interaktif</h1>
-        <p class="text-gray-600 text-center mb-8">
-            Buat prompt yang sempurna untuk AI Anda. Prompt akan merujuk ke dokumen yang Anda kirim, dan Anda bisa memilih detailnya dari dropdown.
-        </p>
-
-        <div class="space-y-6">
-            <!-- Peran Anda (Dropdown) -->
-            <div>
-                <label for="yourRole" class="block text-sm font-medium text-gray-700 mb-1">Peran Anda sebagai audiens:</label>
-                <select id="yourRole"
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm transition duration-150 ease-in-out">
-                    <option value="audiens umum">Audiens Umum</option>
-                    <option value="mahasiswa">Mahasiswa</option>
-                    <option value="pakar di bidang ini">Pakar di Bidang Ini</option>
-                    <option value="calon investor">Calon Investor</option>
-                    <option value="kolega/rekan kerja">Kolega/Rekan Kerja</option>
-                    <option value="manajer/pimpinan tim">Manajer/Pimpinan Tim</option>
-                    <option value="klien potensial">Klien Potensial</option>
-                    <option value="pengembang">Pengembang</option>
-                </select>
-            </div>
-
-            <!-- Tujuan Pertanyaan (Dropdown) -->
-            <div>
-                <label for="questionPurpose" class="block text-sm font-medium text-gray-700 mb-1">Tujuan Anda dari AI (Jenis pertanyaan yang diinginkan):</label>
-                <select id="questionPurpose"
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm transition duration-150 ease-in-out">
-                    <option value="membuat pertanyaan mendalam dan relevan">Membuat pertanyaan mendalam dan relevan</option>
-                    <option value="mengidentifikasi kelemahan argumen atau area yang kurang jelas">Mengidentifikasi kelemahan argumen atau area yang kurang jelas</option>
-                    <option value="mencari peluang kolaborasi atau solusi inovatif">Mencari peluang kolaborasi atau solusi inovatif</option>
-                    <option value="memverifikasi fakta dan data yang disajikan">Memverifikasi fakta dan data yang disajikan</option>
-                    <option value="memahami konsep yang kompleks dengan lebih baik">Memahami konsep yang kompleks dengan lebih baik</option>
-                    <option value="memberikan umpan balik konstruktif">Memberikan umpan balik konstruktif</option>
-                    <option value="mengeksplorasi implikasi masa depan atau skenario lanjutan">Mengeksplorasi implikasi masa depan atau skenario lanjutan</option>
-                    <option value="menganalisis tren dan pola">Menganalisis tren dan pola</option>
-                    <option value="mengidentifikasi potensi risiko atau tantangan">Mengidentifikasi potensi risiko atau tantangan</option>
-                    <option value="mengembangkan rekomendasi tindakan">Mengembangkan rekomendasi tindakan</option>
-                    <option value="membandingkan dan mengkontraskan ide/solusi">Membandingkan dan mengkontraskan ide/solusi</option>
-                    <option value="menilai kelayakan atau dampak">Menilai kelayakan atau dampak</option>
-                    <option value="menghasilkan ide-ide baru atau brainstorming">Menghasilkan ide-ide baru atau brainstorming</option>
-                    <option value="mengevaluasi strategi yang disajikan">Mengevaluasi strategi yang disajikan</option>
-                </select>
-            </div>
-
-            <!-- Gaya Pertanyaan (Multi-select Dropdown) -->
-            <div>
-                <label for="questionStyle" class="block text-sm font-medium text-gray-700 mb-1">Gaya Pertanyaan (Pilih satu atau lebih):</label>
-                <select id="questionStyle" multiple
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm transition duration-150 ease-in-out">
-                    <option value="klarifikasi">Klarifikasi</option>
-                    <option value="kritis">Kritis</option>
-                    <option value="eksploratif">Eksploratif</option>
-                    <option value="solusi-oriented">Solusi-Oriented</option>
-                    <option value="strategis">Strategis</option>
-                    <option value="taktis">Taktis</option>
-                    <option value="berbasis bukti">Berbasis Bukti</option>
-                    <option value="inovatif">Inovatif</option>
-                    <option value="pertanyaan terbuka">Pertanyaan Terbuka</option>
-                    <option value="analitis">Analitis</option>
-                </select>
-                <p class="text-xs text-gray-500 mt-1">Tekan Ctrl/Cmd untuk memilih beberapa opsi.</p>
-            </div>
-
-            <!-- Instruksi Tambahan (Textarea) -->
-            <div>
-                <label for="additionalInstructions" class="block text-sm font-medium text-gray-700 mb-1">Instruksi Tambahan untuk AI (Opsional):</label>
-                <textarea id="additionalInstructions" rows="3" placeholder="Misalnya: 'Berikan 5 pertanyaan saja', 'Fokus pada bagian X atau Y', 'Gunakan bahasa yang sederhana'"
-                          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 sm:text-sm transition duration-150 ease-in-out resize-y"></textarea>
-            </div>
-
-            <!-- Tombol Generate Prompt -->
-            <button id="generatePromptBtn"
-                    class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-md shadow-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform transition-all duration-200 hover:scale-105">
-                Buat Prompt
-            </button>
+<!-- Body utama aplikasi, sekarang selalu dalam mode gelap -->
+<body class="min-h-screen flex items-center justify-center p-4 flex-col">
+    <!-- Modal Kustom untuk Alert (Pengganti alert() bawaan browser) -->
+    <div id="customAlert" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="p-6 rounded-2xl shadow-xl text-center max-w-sm w-full">
+            <p id="alertMessage" class="mb-6 text-lg"></p>
+            <button onclick="document.getElementById('customAlert').classList.add('hidden')" class="btn-primary">Tutup</button>
         </div>
-
-        <!-- Output Prompt -->
-        <div class="mt-8 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-inner">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Prompt Anda:</h2>
-            <div id="outputPrompt" class="bg-gray-100 p-4 rounded-md text-gray-800 text-sm break-words whitespace-pre-wrap min-h-[80px] flex items-center justify-center text-center">
-                Prompt yang dihasilkan akan muncul di sini.
-            </div>
-            <button id="copyPromptBtn"
-                    class="mt-4 w-full bg-green-500 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transform transition-all duration-200 hover:scale-105">
-                Salin Prompt
-            </button>
-        </div>
-
-        <!-- Footer -->
-        <div class="mt-8 text-center text-gray-500 text-sm">
-            Dibuat oleh Ulin Kt
-        </div>
-
-        <!-- Message Box for Alerts -->
-        <div id="messageBox" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
-            <div class="bg-white p-6 rounded-lg shadow-xl text-center max-w-sm w-full">
-                <p id="messageText" class="text-lg text-gray-800 mb-4"></p>
-                <button id="closeMessageBox" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Oke</button>
-            </div>
-        </div>
-
     </div>
 
+    <!-- Kontainer utama aplikasi -->
+    <div class="container-card w-full max-w-4xl">
+        <h1 class="text-3xl font-bold text-center mb-2 text-gray-50">Penghasil Prompt AI Kreatif</h1>
+        <p class="text-center text-gray-300 mb-8 text-lg">Masukkan berbagai detail untuk menciptakan prompt yang spesifik dan memukau!</p>
+
+        <!-- Bagian input formulir, menggunakan grid untuk layout responsif -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Input Subjek Utama (Wajib Diisi) -->
+            <div>
+                <label for="mainSubject" class="block text-sm font-medium text-gray-300 mb-2">Subjek Utama <span class="text-red-500">*</span></label>
+                <input type="text" id="mainSubject" class="input-field" placeholder="Contoh: Seorang wanita muda, Seekor naga, Robot canggih">
+            </div>
+            <!-- Input Aksi / Gaya -->
+            <div>
+                <label for="actionStyle" class="block text-sm font-medium text-gray-300 mb-2">Aksi atau Gaya</label>
+                <input type="text" id="actionStyle" class="input-field" placeholder="Contoh: Berdiri tegak, Terbang di langit, Memainkan gitar">
+            </div>
+            <!-- Input Latar Belakang -->
+            <div>
+                <label for="background" class="block text-sm font-medium text-gray-300 mb-2">Latar Belakang</label>
+                <input type="text" id="background" class="input-field" placeholder="Contoh: Di depan rumah, Hutan lebat, Di planet asing">
+            </div>
+            <!-- Pilihan Suasana (Dropdown + Input Manual) -->
+            <div>
+                <label for="atmosphereSelect" class="block text-sm font-medium text-gray-300 mb-2">Suasana</label>
+                <select id="atmosphereSelect" class="input-field mb-2">
+                    <option value="">Pilih Suasana</option>
+                    <option value="Ceria">Ceria</option>
+                    <option value="Misterius">Misterius</option>
+                    <option value="Dramatis">Dramatis</option>
+                    <option value="Tenang">Tenang</option>
+                    <option value="Petualangan">Petualangan</option>
+                    <option value="Horor">Horor</option>
+                    <option value="Fantasi">Fantasi</option>
+                    <option value="Romantis">Romantis</option>
+                    <option value="Suram">Suram</option>
+                    <option value="Futuristik">Futuristik</option>
+                    <option value="Epik">Epik</option>
+                    <option value="Gembira">Gembira</option>
+                    <option value="Nostalgia">Nostalgia</option>
+                    <option value="Melankolis">Melankolis</option>
+                    <option value="Tegang">Tegang</option>
+                    <option value="Damai">Damai</option>
+                    <option value="Magis">Magis</option>
+                    <option value="Aksi">Aksi</option>
+                    <option value="Komedi">Komedi</ माध्यम>
+                    <option value="Sedih">Sedih</option>
+                    <option value="Mengharukan">Mengharukan</ माध्यम>
+                    <option value="Kacau">Kacau</ माध्यम>
+                    <option value="Seram">Seram</ माध्यम>
+                    <option value="Harapan">Harapan</ माध्यम>
+                    <option value="Keajaiban">Keajaiban</ माध्यम>
+                    <option value="Kemarahan">Kemarahan</ माध्यम>
+                    <option value="Keheningan">Keheningan</ माध्यम>
+                </select>
+                <input type="text" id="manualAtmosphere" class="input-field" placeholder="Atau masukkan suasana manual (akan menimpa pilihan di atas)">
+            </div>
+            <!-- Pilihan Ekspresi (Dropdown Saja) -->
+            <div>
+                <label for="expression" class="block text-sm font-medium text-gray-300 mb-2">Ekspresi</label>
+                <select id="expression" class="input-field">
+                    <option value="">Pilih Ekspresi</option>
+                    <option value="Senang">Senang</option>
+                    <option value="Sedih">Sedih</ माध्यम>
+                    <option value="Marah">Marah</ माध्यम>
+                    <option value="Terkejut">Terkejut</ माध्यम>
+                    <option value="Bingung">Bingung</ माध्यम>
+                    <option value="Tersenyum">Tersenyum</ माध्यम>
+                    <option value="Netral">Netral</ माध्यम>
+                    <option value="Takut">Takut</ माध्यम>
+                    <option value="Antusias">Antusias</ माध्यम>
+                    <option value="Gelisah">Gelisah</ माध्यम>
+                    <option value="Bosan">Bosan</ माध्यम>
+                    <option value="Percaya diri">Percaya diri</ माध्यम>
+                    <option value="Putus asa">Putus asa</ माध्यम>
+                    <option value="Muak">Muak</ माध्यम>
+                    <option value="Cemburu">Cemburu</ माध्यम>
+                    <option value="Bangga">Bangga</ माध्यम>
+                    <option value="Lega">Lega</ माध्यम>
+                    <option value="Malu">Malu</ माध्यम>
+                    <option value="Curiga">Curiga</ माध्यम>
+                    <option value="Lelah">Lelah</ माध्यम>
+                    <option value="Vakum">Vakum</ माध्यम>
+                    <option value="Jengkel">Jengkel</ माध्यम>
+                    <option value="Geli">Geli</ माध्यम>
+                    <option value="Waspada">Waspada</ माध्यम>
+                    <option value="Tenang">Tenang</ माध्यम>
+                    <option value="Kagum">Kagum</ माध्यम>
+                    <option value="Tercengang">Tercengang</ माध्यम>
+                    <option value="Penuh harap">Penuh harap</ माध्यम>
+                    <option value="Gugup">Gugup</ माध्यम>
+                    <option value="Puas">Puas</ माध्यम>
+                    <option value="Bersemangat">Bersemangat</ माध्यम>
+                    <option value="Sinis">Sinis</ माध्यम>
+                    <option value="Menyalahkan">Menyalahkan</ माध्यम>
+                    <option value="Menggoda">Menggoda</ माध्यम>
+                    <option value="Kesepian">Kesepian</ माध्यम>
+                    <option value="Ragu-ragu">Ragu-ragu</ माध्यम>
+                    <option value="Bersalah">Bersalah</ माध्यम>
+                </select>
+            </div>
+            <!-- Pilihan Gaya & Visual (Dropdown) -->
+            <div>
+                <label for="visualStyle" class="block text-sm font-medium text-gray-300 mb-2">Gaya & Visual</label>
+                <select id="visualStyle" class="input-field">
+                    <option value="">Pilih Gaya & Visual</option>
+                    <option value="Realistis">Realistis</option>
+                    <option value="Fotorealistik">Fotorealistik</ माध्यम>
+                    <option value="Seni Digital">Digital Art</option>
+                    <option value="Ilustrasi">Illustration</ माध्यम>
+                    <option value="Lukisan Minyak">Oil Painting</option>
+                    <option value="Lukisan Cat Air">Watercolor Painting</ माध्यम>
+                    <option value="Sketsa Pensil">Pencil Sketch</ माध्यम>
+                    <option value="Kartun 2D">2D Cartoon</ माध्यम>
+                    <option value="Animasi 3D">3D Animation</ माध्यम>
+                    <option value="Vektor">Vector</ माध्यम>
+                    <option value="Pixel Art">Pixel Art</ माध्यम>
+                    <option value="Seni Konseptual">Concept Art</ माध्यम>
+                    <option value="Gaya Komik">Comic Book Style</ माध्यम>
+                    <option value="Manga/Anime">Manga/Anime</ माध्यम>
+                    <option value="Seni Fantasi">Fantasy Art</ माध्यम>
+                    <option value="Seni Fiksi Ilmiah">Sci-fi Art</ माध्यम>
+                    <option value="Seni Abstrak">Abstract Art</ माध्यम>
+                    <option value="Seni Kubisme">Cubism Art</ माध्यम>
+                    <option value="Seni Impresionisme">Impressionism Art</ माध्यम>
+                    <option value="Gaya Surealisme">Surrealism Style</ माध्यम>
+                    <option value="Gaya Barok">Baroque Style</ माध्यम>
+                    <option value="Gaya Renaissance">Renaissance Style</ माध्यम>
+                    <option value="Pop Art">Pop Art</ माध्यम>
+                    <option value="Retrofuturisme">Retrofuturism</ माध्यम>
+                    <option value="Cyberpunk">Cyberpunk</ माध्यम>
+                    <option value="Steampunk">Steampunk</ माध्यम>
+                    <option value="Gaya Gothik">Gothic Style</ माध्यम>
+                    <option value="Vaporwave">Vaporwave</ माध्यम>
+                    <option value="Glitch Art">Glitch Art</ माध्यम>
+                    <option value="Seni Voxel">Voxel Art</ माध्यम>
+                    <option value="Seni Tekstur">Textured Art</ माध्यम>
+                    <option value="Gaya Flat Design">Flat Design Style</ माध्यम>
+                    <option value="Material Design">Material Design</ माध्यम>
+                    <option value="Isometrik">Isometric</ माध्यम>
+                    <option value="Low Poly">Low Poly</ माध्यम>
+                    <option value="Hi-Fi (High Fidelity)">Hi-Fi (High Fidelity)</ माध्यम>
+                    <option value="Lo-Fi (Low Fidelity)">Lo-Fi (Low Fidelity)</ माध्यम>
+                    <option value="Cel Shading">Cel Shading</ माध्यम>
+                    <option value="Seni Garis">Line Art</ माध्यम>
+                    <option value="Seni 8-bit">8-bit Art</ माध्यम>
+                    <option value="Seni 16-bit">16-bit Art</ माध्यम>
+                </select>
+            </div>
+            <!-- Pilihan Pencahayaan (Dropdown Baru) -->
+            <div>
+                <label for="lighting" class="block text-sm font-medium text-gray-300 mb-2">Pencahayaan</label>
+                <select id="lighting" class="input-field">
+                    <option value="">Pilih Pencahayaan</option>
+                    <option value="Alami">Alami</option>
+                    <option value="Lampu Studio">Lampu Studio</ माध्यम>
+                    <option value="Cahaya Lembut">Cahaya Lembut</ माध्यम>
+                    <option value="Cahaya Keras">Cahaya Keras</ माध्यम>
+                    <option value="Cahaya Sisi">Cahaya Sisi</ माध्यम>
+                    <option value="Cahaya Belakang">Cahaya Belakang</ माध्यम>
+                    <option value="Cahaya Depan">Cahaya Depan</ माध्यम>
+                    <option value="Cahaya Kunci">Cahaya Kunci</ माध्यम>
+                    <option value="Cahaya Pengisi">Cahaya Pengisi</ माध्यम>
+                    <option value="Cahaya Rim">Cahaya Rim</ माध्यम>
+                    <option value="Cahaya Siluet">Cahaya Siluet</ माध्यम>
+                    <option value="Pencahayaan Low-Key">Pencahayaan Low-Key</ माध्यम>
+                    <option value="Pencahayaan High-Key">Pencahayaan High-Key</ माध्यम>
+                    <option value="Cahaya Sekunder">Cahaya Sekunder</ माध्यम>
+                    <option value="Cahaya Garis">Cahaya Garis</ माध्यम>
+                    <option value="Cahaya Matahari Terbit">Cahaya Matahari Terbit</ माध्यम>
+                    <option value="Cahaya Matahari Terbenam">Cahaya Matahari Terbenam</ माध्यम>
+                    <option value="Cahaya Malam Hari">Cahaya Malam Hari</ माध्यम>
+                    <option value="Cahaya Obor">Cahaya Obor</ माध्यम>
+                    <option value="Cahaya Lilin">Cahaya Lilin</ माध्यम>
+                    <option value="Cahaya Lampu Jalan">Cahaya Lampu Jalan</ माध्यम>
+                    <option value="Cahaya Kilat">Cahaya Kilat</ माध्यम>
+                    <option value="Cahaya Neon">Cahaya Neon</ माध्यम>
+                    <option value="Cahaya Fluorescent">Cahaya Fluorescent</ माध्यम>
+                    <option value="Cahaya Gelap">Cahaya Gelap</ माध्यम>
+                    <option value="Cahaya Terang">Cahaya Terang</ माध्यम>
+                    <option value="Pencahayaan Dramatis">Pencahayaan Dramatis</ माध्यम>
+                    <option value="Pencahayaan Ambient">Pencahayaan Ambient</ माध्यम>
+                    <option value="Cahaya Spot">Cahaya Spot</ माध्यम>
+                    <option value="Cahaya Global">Cahaya Global</ माध्यम>
+                </select>
+            </div>
+            <!-- Input Jenis Kamera (Dropdown + Input Manual) -->
+            <div>
+                <label for="cameraTypeSelect" class="block text-sm font-medium text-gray-300 mb-2">Jenis Kamera</label>
+                <select id="cameraTypeSelect" class="input-field mb-2">
+                    <option value="">Pilih Jenis Kamera</option>
+                    <option value="Kamera Profesional">Kamera Profesional</option>
+                    <option value="Kamera Android">Kamera Android</option>
+                    <option value="DSLR">DSLR</option>
+                    <option value="Mirrorless">Mirrorless</option>
+                    <option value="Point and Shoot">Point and Shoot</option>
+                    <option value="Drone Camera">Drone Camera</option>
+                    <option value="Action Camera">Action Camera</option>
+                    <option value="Disposable Camera">Disposable Camera</option>
+                    <option value="Vintage Camera">Vintage Camera</option>
+                </select>
+                <input type="text" id="manualCameraType" class="input-field" placeholder="Atau masukkan jenis kamera manual">
+            </div>
+            <!-- Pilihan Sudut Kamera (Dropdown Baru) -->
+            <div>
+                <label for="cameraAngle" class="block text-sm font-medium text-gray-300 mb-2">Sudut Kamera</label>
+                <select id="cameraAngle" class="input-field">
+                    <option value="">Pilih Sudut Kamera</option>
+                    <option value="Tampilan Mata Burung">Tampilan Mata Burung (Bird's Eye View)</option>
+                    <option value="Tampilan Tinggi">Tampilan Tinggi (High-Angle Shot)</option>
+                    <option value="Tampilan Mata Manusia">Tampilan Mata Manusia (Eye-Level Shot)</option>
+                    <option value="Tampilan Rendah">Tampilan Rendah (Low-Angle Shot)</option>
+                    <option value="Tampilan Cacing">Tampilan Cacing (Worm's Eye View)</option>
+                    <option value="Close-up">Close-up</option>
+                    <option value="Extreme Close-up">Extreme Close-up</option>
+                    <option value="Medium Shot">Medium Shot</option>
+                    <option value="Full Shot">Full Shot</option>
+                    <option value="Long Shot">Long Shot</option>
+                    <option value="Extreme Long Shot">Extreme Long Shot</option>
+                    <option value="Over-the-Shoulder Shot">Over-the-Shoulder Shot</option>
+                    <option value="Point of View (POV) Shot">Point of View (POV) Shot</option>
+                    <option value="Dutch Angle">Dutch Angle (Miring)</option>
+                    <option value="Dari Depan">Dari Depan</option>
+                    <option value="Dari Belakang">Dari Belakang</option>
+                    <option value="Dari Samping Kanan">Dari Samping Kanan</option>
+                    <option value="Dari Samping Kiri">Dari Samping Kiri</option>
+                    <option value="Dari Serong Depan Kanan">Dari Serong Depan Kanan</option>
+                    <option value="Dari Serong Depan Kiri">Dari Serong Depan Kiri</option>
+                    <option value="Dari Serong Belakang Kanan">Dari Serong Belakang Kanan</option>
+                    <option value="Dari Serong Belakang Kiri">Dari Serong Belakang Kiri</option>
+                    <option value="Sudut Lebar (Wide Angle)">Sudut Lebar (Wide Angle)</option>
+                    <option value="Sudut Sempit (Telephoto)">Sudut Sempit (Telephoto)</option>
+                </select>
+            </div>
+            <!-- Input Detail Tambahan (Textarea) -->
+            <div class="md:col-span-2">
+                <label for="additionalDetails" class="block text-sm font-medium text-gray-300 mb-2">Detail Tambahan</label>
+                <textarea id="additionalDetails" rows="3" class="input-field" placeholder="Contoh: Mengenakan jaket kulit hitam, dengan cahaya keemasan senja, ada kabut tipis di kejauhan."></textarea>
+            </div>
+        </div>
+
+        <!-- Tombol untuk menghasilkan prompt -->
+        <div class="text-center mb-8">
+            <button onclick="generatePrompt()" class="btn-primary" id="generateButton">Hasilkan Prompt</button>
+            <div id="loadingIndicator" class="loading-indicator mt-4"></div>
+        </div>
+
+        <!-- Area Output Prompt dalam dua bahasa -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Output Prompt Bahasa Indonesia -->
+            <div>
+                <label for="indonesianPrompt" class="block text-sm font-medium text-gray-300 mb-2">Prompt Bahasa Indonesia</label>
+                <textarea id="indonesianPrompt" rows="5" class="input-field bg-gray-800 cursor-not-allowed text-gray-200" readonly></textarea>
+                <button onclick="copyToClipboard('indonesianPrompt')" class="btn-secondary mt-3 w-full">Salin Prompt Indonesia</button>
+            </div>
+            <!-- Output Prompt Bahasa Inggris -->
+            <div>
+                <label for="englishPrompt" class="block text-sm font-medium text-gray-300 mb-2">Prompt Bahasa Inggris</label>
+                <textarea id="englishPrompt" rows="5" class="input-field bg-gray-800 cursor-not-allowed text-gray-200" readonly></textarea>
+                <button onclick="copyToClipboard('englishPrompt')" class="btn-secondary mt-3 w-full">Salin Prompt Inggris</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-gray-400 text-sm">
+        Copyright &copy; ulin kt 2025
+    </footer>
+
     <script>
-        // Fungsi untuk menampilkan pesan di kotak pesan kustom
-        function showMessage(message) {
-            const messageBox = document.getElementById('messageBox');
-            const messageText = document.getElementById('messageText');
-            messageText.textContent = message;
-            messageBox.classList.remove('hidden');
+        // Objek mapping untuk terjemahan pilihan suasana dari Indonesia ke Inggris
+        const atmosphereOptions = {
+            "Ceria": "cheerful",
+            "Misterius": "mysterious",
+            "Dramatis": "dramatic",
+            "Tenang": "calm",
+            "Petualangan": "adventurous",
+            "Horor": "horror",
+            "Fantasi": "fantasy",
+            "Romantis": "romantic",
+            "Suram": "gloomy",
+            "Futuristik": "futuristic",
+            "Epik": "epic",
+            "Gembira": "joyful",
+            "Nostalgia": "nostalgic",
+            "Melankolis": "melancholic",
+            "Tegang": "tense",
+            "Damai": "peaceful",
+            "Magis": "magical",
+            "Aksi": "action-packed",
+            "Komedi": "comedic",
+            "Sedih": "sad",
+            "Mengharukan": "heartwarming",
+            "Kacau": "chaotic",
+            "Seram": "spooky",
+            "Harapan": "hopeful",
+            "Keajaiban": "wonderous",
+            "Kemarahan": "angry",
+            "Keheningan": "silent"
+        };
+
+        // Objek mapping untuk terjemahan pilihan ekspresi dari Indonesia ke Inggris
+        const expressionOptions = {
+            "Senang": "happy",
+            "Sedih": "sad",
+            "Marah": "angry",
+            "Terkejut": "surprised",
+            "Bingung": "confused",
+            "Tersenyum": "smiling",
+            "Netral": "neutral",
+            "Takut": "scared",
+            "Antusias": "enthusiastic",
+            "Gelisah": "anxious",
+            "Bosan": "bored",
+            "Percaya diri": "confident",
+            "Putus asa": "desperate",
+            "Muak": "disgusted",
+            "Cemburu": "jealous",
+            "Bangga": "proud",
+            "Lega": "relieved",
+            "Malu": "shy",
+            "Curiga": "suspicious",
+            "Lelah": "tired",
+            "Vakum": "vacant",
+            "Jengkel": "annoyed",
+            "Geli": "amused",
+            "Waspada": "alert",
+            "Tenang": "calm",
+            "Kagum": "awe",
+            "Tercengang": "astonished",
+            "Penuh harap": "hopeful",
+            "Gugup": "nervous",
+            "Puas": "satisfied",
+            "Bersemangat": "excited",
+            "Sinis": "cynical",
+            "Menyalahkan": "blaming",
+            "Menggoda": "teasing",
+            "Kesepian": "lonely",
+            "Ragu-ragu": "hesitant",
+            "Bersalah": "guilty"
+        };
+
+        // Objek mapping untuk terjemahan pilihan gaya & visual baru dari Indonesia ke Inggris
+        const visualStyleOptions = {
+            "Realistis": "realistic",
+            "Fotorealistik": "photorealistic",
+            "Seni Digital": "digital art",
+            "Ilustrasi": "illustration",
+            "Lukisan Minyak": "oil painting",
+            "Lukisan Cat Air": "watercolor painting",
+            "Sketsa Pensil": "pencil sketch",
+            "Kartun 2D": "2D cartoon",
+            "Animasi 3D": "3D animation",
+            "Vektor": "vector",
+            "Pixel Art": "pixel art",
+            "Seni Konseptual": "concept art",
+            "Gaya Komik": "comic book style",
+            "Manga/Anime": "manga/anime",
+            "Seni Fantasi": "fantasy art",
+            "Seni Fiksi Ilmiah": "sci-fi art",
+            "Seni Abstrak": "abstract art",
+            "Seni Kubisme": "cubism art",
+            "Seni Impresionisme": "impressionism art",
+            "Gaya Surealisme": "surrealism style",
+            "Gaya Barok": "baroque style",
+            "Gaya Renaissance": "renaissance style",
+            "Pop Art": "pop art",
+            "Retrofuturisme": "retrofuturism",
+            "Cyberpunk": "cyberpunk",
+            "Steampunk": "steampunk",
+            "Gaya Gothik": "gothic style",
+            "Vaporwave": "vaporwave",
+            "Glitch Art": "glitch art",
+            "Seni Voxel": "voxel art",
+            "Seni Tekstur": "textured art",
+            "Gaya Flat Design": "flat design style",
+            "Material Design": "material design",
+            "Isometrik": "isometric",
+            "Low Poly": "low poly",
+            "Hi-Fi (High Fidelity)": "hi-fi (high fidelity)",
+            "Lo-Fi (Low Fidelity)": "lo-fi (low fidelity)",
+            "Cel Shading": "cel shading",
+            "Seni Garis": "line art",
+            "Seni 8-bit": "8-bit art",
+            "Seni 16-bit": "16-bit art"
+        };
+
+        // Objek mapping untuk terjemahan pilihan pencahayaan dari Indonesia ke Inggris
+        const lightingOptions = {
+            "Alami": "natural light",
+            "Lampu Studio": "studio lighting",
+            "Cahaya Lembut": "soft light",
+            "Cahaya Keras": "hard light",
+            "Cahaya Sisi": "side light",
+            "Cahaya Belakang": "backlight",
+            "Cahaya Depan": "front light",
+            "Cahaya Kunci": "key light",
+            "Cahaya Pengisi": "fill light",
+            "Cahaya Rim": "rim light",
+            "Cahaya Siluet": "silhouette lighting",
+            "Pencahayaan Low-Key": "low-key lighting",
+            "Pencahayaan High-Key": "high-key lighting",
+            "Cahaya Sekunder": "secondary light",
+            "Cahaya Garis": "line light",
+            "Cahaya Matahari Terbit": "sunrise light",
+            "Cahaya Matahari Terbenam": "sunset light",
+            "Cahaya Malam Hari": "night light",
+            "Cahaya Obor": "torchlight",
+            "Cahaya Lilin": "candlelight",
+            "Cahaya Lampu Jalan": "street light",
+            "Cahaya Kilat": "flash light",
+            "Cahaya Neon": "neon light",
+            "Cahaya Fluorescent": "fluorescent light",
+            "Cahaya Gelap": "dark light",
+            "Cahaya Terang": "bright light",
+            "Pencahayaan Dramatis": "dramatic lighting",
+            "Pencahayaan Ambient": "ambient lighting",
+            "Cahaya Spot": "spotlight",
+            "Cahaya Global": "global illumination"
+        };
+
+        // Objek mapping untuk terjemahan pilihan jenis kamera dari Indonesia ke Inggris
+        const cameraTypeOptions = {
+            "Kamera Profesional": "professional camera",
+            "Kamera Android": "Android phone camera",
+            "DSLR": "DSLR camera",
+            "Mirrorless": "mirrorless camera",
+            "Point and Shoot": "point and shoot camera",
+            "Drone Camera": "drone camera",
+            "Action Camera": "action camera",
+            "Disposable Camera": "disposable camera",
+            "Vintage Camera": "vintage camera"
+        };
+
+        // Objek mapping untuk terjemahan pilihan sudut kamera dari Indonesia ke Inggris
+        const cameraAngleOptions = {
+            "Tampilan Mata Burung": "bird's eye view",
+            "Tampilan Tinggi": "high-angle shot",
+            "Tampilan Mata Manusia": "eye-level shot",
+            "Tampilan Rendah": "low-angle shot",
+            "Tampilan Cacing": "worm's eye view",
+            "Close-up": "close-up",
+            "Extreme Close-up": "extreme close-up",
+            "Medium Shot": "medium shot",
+            "Full Shot": "full shot",
+            "Long Shot": "long shot",
+            "Extreme Long Shot": "extreme long shot",
+            "Over-the-Shoulder Shot": "over-the-shoulder shot",
+            "Point of View (POV) Shot": "point of view (POV) shot",
+            "Dutch Angle": "dutch angle",
+            "Dari Depan": "from front",
+            "Dari Belakang": "from behind",
+            "Dari Samping Kanan": "from right side",
+            "Dari Samping Kiri": "from left side",
+            "Dari Serong Depan Kanan": "from front right diagonal",
+            "Dari Serong Depan Kiri": "from front left diagonal",
+            "Dari Serong Belakang Kanan": "from back right diagonal",
+            "Dari Serong Belakang Kiri": "from back left diagonal",
+            "Sudut Lebar (Wide Angle)": "wide angle",
+            "Sudut Sempit (Telephoto)": "telephoto angle"
+        };
+
+
+        /**
+         * Fungsi untuk menerjemahkan teks dari Bahasa Indonesia ke Bahasa Inggris menggunakan Gemini API.
+         * Teks yang diapit dengan tanda kutip ganda "..." tidak akan diterjemahkan.
+         * @param {string} text - Teks yang akan diterjemahkan.
+         * @returns {Promise<string>} - Teks yang sudah diterjemahkan.
+         */
+        async function translateText(text) {
+            if (!text) return "";
+
+            const originalUntranslatedParts = [];
+            let placeholderCounter = 0;
+
+            // Use replace with a function to find and store untranslatable parts, then replace them with placeholders.
+            // Ensure the regex is global (g flag) and works with all occurrences.
+            const textWithPlaceholders = text.replace(/"(.*?)"/g, (match, content) => {
+                const placeholder = `_NOTRANS_${placeholderCounter++}_`;
+                originalUntranslatedParts.push({ placeholder: placeholder, content: content });
+                return placeholder;
+            });
+
+            console.log("Original text sent to translateText:", text);
+            console.log("Text with placeholders for API:", textWithPlaceholders);
+            console.log("Untranslatable parts detected:", originalUntranslatedParts);
+
+            const prompt = `Translate the following Indonesian text to English, keep it concise and only provide the translated text: "${textWithPlaceholders}"`;
+            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = "AIzaSyD_sK2_XVaw3avF34OzhJaY_t8c4nqLZxE"; // Menggunakan API Key yang diberikan
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            let translatedResult = textWithPlaceholders; // Fallback to placeholder text if API fails
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    console.error(`API response not OK: ${response.status} ${response.statusText}`, errorBody);
+                    // Fallback to original text with placeholders if API call fails, then restore original parts
+                    translatedResult = textWithPlaceholders; 
+                } else {
+                    const result = await response.json();
+                    console.log("API raw result:", result);
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        translatedResult = result.candidates[0].content.parts[0].text.trim();
+                        console.log("Translated text from API (with placeholders):", translatedResult);
+                    } else {
+                        console.error("Unexpected API response structure or no candidates:", result);
+                        translatedResult = textWithPlaceholders; // Fallback to original text with placeholders
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching or parsing translation:", error);
+                translatedResult = textWithPlaceholders; // Fallback to original text with placeholders
+            }
+
+            // Restore original untranslated parts, re-adding the quotes
+            originalUntranslatedParts.forEach(item => {
+                // Ensure placeholder is replaced correctly, even if the translated text has changed order/structure
+                const regexToRestore = new RegExp(item.placeholder, 'g'); // Use global regex for replacement
+                translatedResult = translatedResult.replace(regexToRestore, `"${item.content}"`);
+            });
+
+            console.log("Final translated text (after placeholder restoration):", translatedResult);
+            return translatedResult;
         }
 
-        // Fungsi untuk menyembunyikan kotak pesan
-        document.getElementById('closeMessageBox').addEventListener('click', () => {
-            document.getElementById('messageBox').classList.add('hidden');
-        });
+        /**
+         * Menampilkan pesan alert kustom (menggantikan alert() bawaan browser).
+         * @param {string} message - Pesan yang akan ditampilkan dalam alert.
+         */
+        function showAlert(message) {
+            document.getElementById('alertMessage').innerText = message;
+            document.getElementById('customAlert').classList.remove('hidden');
+            document.getElementById('customAlert').classList.add('flex'); // Mengatur display ke flex untuk centering
+        }
 
-        document.getElementById('generatePromptBtn').addEventListener('click', () => {
-            const role = document.getElementById('yourRole').value; // Mengambil nilai dari dropdown
-            const purpose = document.getElementById('questionPurpose').value; // Mengambil nilai dari dropdown
+        /**
+         * Menghasilkan prompt text-to-image dalam Bahasa Indonesia dan Inggris
+         * berdasarkan input pengguna.
+         */
+        async function generatePrompt() {
+            // Menampilkan loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('generateButton').disabled = true; // Nonaktifkan tombol
+            document.getElementById('indonesianPrompt').value = '';
+            document.getElementById('englishPrompt').value = 'Menerjemahkan input...'; // Pesan saat menerjemahkan
 
-            // Mengambil nilai dari multi-select dropdown untuk gaya pertanyaan
-            const styleSelect = document.getElementById('questionStyle');
-            const selectedStyles = Array.from(styleSelect.options)
-                                      .filter(option => option.selected)
-                                      .map(option => option.value);
-            const additional = document.getElementById('additionalInstructions').value.trim();
-            const outputPromptDiv = document.getElementById('outputPrompt');
+            // Mengambil nilai dari setiap input field dan menghapus spasi di awal/akhir
+            const mainSubject = document.getElementById('mainSubject').value.trim();
+            const actionStyle = document.getElementById('actionStyle').value.trim();
+            const background = document.getElementById('background').value.trim();
 
-            let prompt = `Sesuai dokumen yang saya kirim, saya bertindak sebagai **${role}** dalam presentasi ini.`;
-            prompt += ` Tujuan utama saya adalah **${purpose}**.`;
-            prompt += ` Mohon bantu saya membuat pertanyaan yang spesifik dan relevan berdasarkan isi dokumen.`;
+            const atmosphereSelect = document.getElementById('atmosphereSelect').value;
+            const manualAtmosphere = document.getElementById('manualAtmosphere').value.trim();
+            const finalAtmosphereId = manualAtmosphere ? manualAtmosphere : atmosphereSelect;
 
-            if (selectedStyles.length > 0) {
-                prompt += ` Gaya pertanyaan yang saya inginkan adalah: ${selectedStyles.join(', ')}.`;
-            }
+            const expression = document.getElementById('expression').value;
+            const visualStyle = document.getElementById('visualStyle').value;
+            const lighting = document.getElementById('lighting').value;
 
-            if (additional) {
-                prompt += ` ${additional}`;
-            }
+            const cameraTypeSelect = document.getElementById('cameraTypeSelect').value;
+            const manualCameraType = document.getElementById('manualCameraType').value.trim();
+            const finalCameraType = manualCameraType ? manualCameraType : cameraTypeSelect;
+            
+            const cameraAngle = document.getElementById('cameraAngle').value; // Ambil nilai Sudut Kamera
 
-            // Menambahkan instruksi untuk membuat prompt lebih sempurna
-            prompt += ` Pastikan pertanyaan Anda:
-- Sangat relevan dan didukung oleh isi dokumen.
-- Membantu saya memahami lebih dalam atau mengidentifikasi poin-poin kunci.
-- Sesuai dengan peran saya sebagai ${role} dan tujuan saya untuk ${purpose}.
-- Jika ada gaya spesifik yang diminta, ikuti gaya tersebut dengan konsisten.
-- Hindari pertanyaan yang sudah jelas atau mudah ditemukan jawabannya langsung di dokumen.
-- Fokus pada analisis, implikasi, atau tantangan/solusi.`;
+            const additionalDetails = document.getElementById('additionalDetails').value.trim();
 
-            outputPromptDiv.textContent = prompt;
-        });
-
-        document.getElementById('copyPromptBtn').addEventListener('click', () => {
-            const promptText = document.getElementById('outputPrompt').textContent;
-            if (promptText === "Prompt yang dihasilkan akan muncul di sini.") {
-                showMessage("Tidak ada prompt untuk disalin. Silakan buat prompt terlebih dahulu.");
+            // Validasi: Subjek Utama harus diisi
+            if (!mainSubject) {
+                showAlert('Subjek Utama wajib diisi!');
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('generateButton').disabled = false;
+                document.getElementById('englishPrompt').value = '';
                 return;
             }
 
-            // Fallback for document.execCommand('copy')
-            const textarea = document.createElement('textarea');
-            textarea.value = promptText;
-            textarea.style.position = 'absolute';
-            textarea.style.left = '-9999px'; // Sembunyikan textarea dari tampilan
-            document.body.appendChild(textarea);
-            textarea.select();
+            // --- Konstruksi Prompt Bahasa Indonesia ---
+            let idPromptParts = [];
+            // Subjek Utama selalu ada
+            idPromptParts.push(mainSubject); 
+
+            if (actionStyle) {
+                idPromptParts.push(`sedang ${actionStyle}`);
+            }
+
+            if (background) {
+                idPromptParts.push(`berada di ${background}`);
+            }
+            
+            let descriptiveElements = [];
+            if (expression) {
+                descriptiveElements.push(`ekspresi ${expression}`);
+            }
+            if (finalAtmosphereId) {
+                descriptiveElements.push(`suasana ${finalAtmosphereId}`);
+            }
+            if (visualStyle) {
+                descriptiveElements.push(`gaya visual ${visualStyle}`);
+            }
+            if (lighting) {
+                descriptiveElements.push(`pencahayaan ${lighting}`);
+            }
+            if (finalCameraType) {
+                descriptiveElements.push(`difoto dengan ${finalCameraType}`);
+            }
+            if (cameraAngle) { 
+                descriptiveElements.push(`sudut kamera ${cameraAngle}`);
+            }
+
+            // Gabungkan elemen deskriptif dengan "dengan"
+            if (descriptiveElements.length > 0) {
+                idPromptParts.push(`dengan ${descriptiveElements.join(', ')}`);
+            }
+
+            if (additionalDetails) {
+                idPromptParts.push(additionalDetails);
+            }
+
+            // Menentukan kata kunci kualitas berdasarkan gaya visual
+            let qualityKeywordsId = "";
+            const cartoonStyles = [
+                "Kartun 2D", "Animasi 3D", "Vektor", "Pixel Art", "Gaya Komik", "Manga/Anime",
+                "Cel Shading", "Seni Garis", "Seni 8-bit", "Seni 16-bit"
+            ];
+
+            if (visualStyle && cartoonStyles.includes(visualStyle)) {
+                qualityKeywordsId = "gaya kartun, visual cerah, garis bersih, warna pop, ilustrasi digital, render 2D/3D, karakter lucu, ekspresi dinamis.";
+            } else if (visualStyle === "Realistis" || visualStyle === "Fotorealistik") { // Tambahkan frasa realistis jika gaya ini dipilih
+                qualityKeywordsId = "gambar berkualitas tinggi, detail realistis, sinematik, visual memukau, fotografi profesional, resolusi 8K.";
+            }
+            
+            if (qualityKeywordsId) { // Hanya tambahkan jika tidak kosong
+                idPromptParts.push(qualityKeywordsId);
+            }
+
+            // Menggabungkan semua bagian prompt Indonesia menjadi kalimat lengkap
+            let idPrompt = idPromptParts.filter(part => part !== '').join(', ');
+            // Pastikan prompt berakhir dengan titik jika ada konten
+            if (idPrompt.length > 0 && !idPrompt.endsWith('.')) {
+                idPrompt += '.';
+            }
+            document.getElementById('indonesianPrompt').value = idPrompt;
+
+
+            // --- Konstruksi Prompt Bahasa Inggris ---
+            // Terjemahkan SELURUH prompt Bahasa Indonesia untuk mendapatkan prompt Bahasa Inggris
+            const enPrompt = await translateText(idPrompt);
+            document.getElementById('englishPrompt').value = enPrompt;
+
+            // Sembunyikan loading indicator
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('generateButton').disabled = false; // Aktifkan kembali tombol
+        }
+
+        /**
+         * Menyalin teks dari textarea yang ditentukan ke clipboard.
+         * Menggunakan document.execCommand('copy') karena navigator.clipboard.writeText()
+         * mungkin memiliki batasan di lingkungan iframe.
+         * @param {string} elementId - ID dari elemen textarea yang akan disalin.
+         */
+        function copyToClipboard(elementId) {
+            const copyText = document.getElementById(elementId);
+            copyText.select(); // Pilih teks di textarea
+            copyText.setSelectionRange(0, 99999); // Untuk perangkat seluler
 
             try {
-                const successful = document.execCommand('copy');
-                const msg = successful ? 'Prompt berhasil disalin!' : 'Gagal menyalin prompt.';
-                showMessage(msg);
+                document.execCommand('copy'); // Jalankan perintah salin
+                showAlert('Prompt berhasil disalin!');
             } catch (err) {
-                console.error('Gagal menyalin:', err);
-                showMessage('Terjadi kesalahan saat menyalin prompt. Silakan coba lagi secara manual.');
-            } finally {
-                document.body.removeChild(textarea); // Hapus textarea setelah digunakan
+                showAlert('Gagal menyalin prompt.');
             }
-        });
+        }
     </script>
 </body>
 </html>
